@@ -10,18 +10,12 @@ set(${CMAKE_SYSTEM_NAME} True)
 
 
 find_package(Event COMPONENTS core REQUIRED)
+find_package(Tapcfg REQUIRED)
 
-set(SOURCES_LIST hub.c
+set(SOURCES_LIST hub.c tun.c
 	main.c)
 
-if(Linux)
-	set(SOURCES_LIST ${SOURCES_LIST} tun-linux.c)
-elseif(Windows)
-	set(SOURCES_LIST ${SOURCES_LIST} tun-windows.c)
-else()
-	set(SOURCES_LIST ${SOURCES_LIST} tun-bsd.c)
-endif(Linux)
-
+include_directories(${TAPCFG_INCLUDE_DIR})
 
 add_definitions(-D${CMAKE_SYSTEM_NAME})
 
@@ -30,3 +24,6 @@ add_executable(tNET
 
 target_link_libraries(tNET
 	${EVENT_LIBRARIES})
+
+target_link_libraries(tNET
+	${TAPCFG_LIBRARIES})
