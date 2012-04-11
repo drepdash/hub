@@ -9,11 +9,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 set(${CMAKE_SYSTEM_NAME} True)
 
 
-find_package(Event COMPONENTS core REQUIRED)
+find_package(Event COMPONENTS core extra REQUIRED)
 find_package(Tapcfg REQUIRED)
 
 set(SOURCES_LIST hub.c tun.c
 	main.c)
+
+if (MSVC)
+	set(SOURCES_LIST ${SOURCES_LIST} wingetopt.c)
+endif(MSVC)
 
 include_directories(${TAPCFG_INCLUDE_DIR}
 	${EVENT_INCLUDE_DIR})
