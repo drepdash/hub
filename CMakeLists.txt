@@ -9,7 +9,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 set(${CMAKE_SYSTEM_NAME} True)
 
 
-find_package(Event COMPONENTS core REQUIRED)
+#find_package(Event COMPONENTS core REQUIRED)
+include_directories(${EVENT_CORE_INCLUDE_DIRS})
+set(${EVENT_CORE_LIBRARY}, ${USER_EVENT_CORE_LIBRARY})
 
 set(SOURCES_LIST hub.c
 	main.c)

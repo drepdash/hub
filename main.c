@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <getopt.h>
+#ifndef WIN32
+#	include <getopt.h>
+#endif /* WIN32 */
 #include <string.h>
 #include <signal.h>
 #include <event2/event.h>
@@ -13,7 +15,7 @@ static struct hub hub = {
   .port = DEFAULT_PORT,
   .tun = {
     .fd = -1,
-    .interface = NULL,
+    .interfce = NULL,
     .type = TNT_TAP
   }
 };
@@ -43,7 +45,7 @@ main(int argc, char * const argv[])
     switch (opt)
     {
       case 'i':
-        hub.tun.interface = strdup(optarg);
+        hub.tun.interfce = strdup(optarg);
         break;
       case 'p':
         hub.port = (short) evutil_strtoll(optarg, NULL, 10);

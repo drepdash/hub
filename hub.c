@@ -1,14 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+#ifndef WIN32
+#	include <unistd.h>
+#	include <err.h>
+#	include <sys/socket.h>
+#	include <sys/wait.h>
+#	include <netinet/in.h>
+#	include <arpa/inet.h>
+#else
+#	ifdef _WIN64
+		typedef __int64         ssize_t;
+#	else
+		typedef _w64 int        ssize_t;
+#	endif
+#	include <stdint.h>
+typedef uint32_t socklen_t;
+#endif /* WIN32 */
 #include <fcntl.h>
-#include <err.h>
 #include <event2/event.h>
-#include <sys/socket.h>
-#include <sys/wait.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+
 
 #include "hub.h"
 
@@ -23,7 +34,7 @@ exec(struct hub *hub, char const *scriptname)
   char *args[3];
 
   args[0] = (char *) scriptname;
-  args[1] = (char *) hub->tun.interface;
+  args[1] = (char *) hub->tun.interfce;
   args[2] = NULL;
 
   switch (fork()) {
@@ -147,8 +158,8 @@ hub_uninit(struct hub *hub)
   exec(hub, "down.sh");
 
   tnt_tun_close(&hub->tun);
-  if (hub->tun.interface) {
-    free(hub->tun.interface);
+  if (hub->tun.interfce) {
+    free(hub->tun.interfce);
   }
 
   evutil_closesocket(event_get_fd(hub->levent));

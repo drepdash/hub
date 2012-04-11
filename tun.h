@@ -5,7 +5,7 @@
  */
 struct tnt_tun {
   int fd;
-  char *interface;
+  char *interfce;
   enum {
     TNT_TUN,
     TNT_TAP
