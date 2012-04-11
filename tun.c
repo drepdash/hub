@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
-#include <err.h>
+#ifndef WIN32
+#	include <err.h>
+#endif /* WIN32 */
 #include <event2/event.h>
 
 #include "tun.h"
@@ -17,12 +19,12 @@ tnt_tun_open(struct tnt_tun *tun) {
   if (tun->handle == NULL)
     tun->handle = tapcfg_init();
 
-  if (tapcfg_start(tun->handle, tun->interface, 0) < 0)
+  if (tapcfg_start(tun->handle, tun->interfce, 0) < 0)
     return (-1);
 
   tun->fd = tapcfg_get_fd(tun->handle);
-  tun->interface = strdup(tapcfg_get_ifname(tun->handle));
-  if (tun->interface == NULL)
+  tun->interfce = strdup(tapcfg_get_ifname(tun->handle));
+  if (tun->interfce == NULL)
     return (-1);
   return (0);
 }

@@ -2,6 +2,8 @@
 #include <stdio.h>
 #ifndef WIN32
 #	include <getopt.h>
+#else
+#	include "wingetopt.h"
 #endif /* WIN32 */
 #include <string.h>
 #include <signal.h>
@@ -11,15 +13,7 @@
 #define DEFAULT_PORT 8989
 
 static struct event_base *evbase;
-static struct hub hub = {
-  .port = DEFAULT_PORT,
-  .ipaddr = NULL,
-  .tun = {
-    .fd = -1,
-    .interfce = NULL,
-    .type = TNT_TAP
-  }
-};
+static struct hub hub;
 
 static void
 handle_quit(int sig)
@@ -39,7 +33,16 @@ int
 main(int argc, char * const argv[])
 {
   int opt;
+#ifndef WIN32
   struct sigaction sa;
+#endif /*WIN32*/
+  memset(&hub, 0, sizeof(hub));
+
+  hub.port = DEFAULT_PORT;
+  hub.ipaddr = NULL;
+  hub.tun.fd = -1;
+  hub.tun.interfce = NULL;
+  hub.tun.type = TNT_TAP;
 
   while ((opt = getopt(argc, argv, "a:i:p:")) != -1)
   {
@@ -64,11 +67,15 @@ main(int argc, char * const argv[])
   
   evbase = event_base_new();
 
+#ifndef WIN32
   memset(&sa, 0, sizeof(sa));
   sa.sa_handler = handle_quit;
   sigaction(SIGINT, &sa, NULL);
   sigaction(SIGTERM, &sa, NULL);
-
+#else
+  signal(SIGINT, handle_quit);
+  signal(SIGTERM, handle_quit);
+#endif /* WIN32 */
   hub_init(&hub, evbase);
   hub_start(&hub);
   event_base_dispatch(evbase);

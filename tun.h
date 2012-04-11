@@ -10,13 +10,15 @@ enum tnt_status {
 
 /*
  */
+enum tnt_tun_type {
+    TNT_TUN,
+    TNT_TAP
+};
+
 struct tnt_tun {
   int fd;
   char *interfce;
-  enum {
-    TNT_TUN,
-    TNT_TAP
-  } type;
+  enum tnt_tun_type type;
   tapcfg_t *handle;
 };
 

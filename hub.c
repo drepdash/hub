@@ -138,8 +138,8 @@ hub_uninit(struct hub *hub)
 
   tnt_tun_iface_set_status(&hub->tun, TNT_STATUS_ALL_DOWN);
   tnt_tun_close(&hub->tun);
-  if (hub->tun.interface) {
-    free(hub->tun.interface);
+  if (hub->tun.interfce) {
+    free(hub->tun.interfce);
   }
 
   evutil_closesocket(event_get_fd(hub->levent));
