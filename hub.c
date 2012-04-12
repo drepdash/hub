@@ -9,10 +9,11 @@
 #	include <netinet/in.h>
 #	include <arpa/inet.h>
 #else
+#	include "winerr.h"
 #	ifdef _WIN64
-		typedef __int64         ssize_t;
+typedef __int64         ssize_t;
 #	else
-		typedef _w64 int        ssize_t;
+typedef _w64 int        ssize_t;
 #	endif
 #	include <stdint.h>
 typedef uint32_t socklen_t;
@@ -29,7 +30,7 @@ char mbuf[MBUFSIZE];
 static void
 listen_callback(evutil_socket_t fd, short ev, void *arg)
 {
-  struct hub *hub = arg;
+  struct hub *hub = (struct hub *)(arg);
   ssize_t n;
 
   if (ev & EV_READ)

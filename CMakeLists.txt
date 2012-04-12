@@ -9,7 +9,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 set(${CMAKE_SYSTEM_NAME} True)
 
 
-find_package(Event COMPONENTS core extra REQUIRED)
+find_package(Event COMPONENTS core REQUIRED)
 find_package(Tapcfg REQUIRED)
 
 set(SOURCES_LIST hub.c tun.c
@@ -17,7 +17,7 @@ set(SOURCES_LIST hub.c tun.c
 
 
 if (MSVC)
-	set(SOURCES_LIST ${SOURCES_LIST} wingetopt.c)
+	set(SOURCES_LIST ${SOURCES_LIST} wingetopt.c winerr.c)
 endif(MSVC)
 
 if (UNIX)
@@ -34,6 +34,10 @@ add_executable(tNET
 
 target_link_libraries(tNET
 	${EVENT_LIBRARIES})
+
+if (MSVC)
+	target_link_libraries(tNET ws2_32)
+endif(MSVC)
 
 target_link_libraries(tNET
 	${TAPCFG_LIBRARIES})
